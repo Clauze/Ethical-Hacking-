@@ -1,0 +1,2 @@
+iptables L -v -> Count the number of times each interface has been used
+iptables -D FORWARD -p icmp -j DROP -> to delete a specific rule
