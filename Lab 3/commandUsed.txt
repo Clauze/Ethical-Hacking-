@@ -1,3 +1,36 @@
 iptables L -v -> Count the number of times each interface has been used
 iptables -D FORWARD -p icmp -j DROP -> to delete a specific rule
+task 2.c 1 command:
+iptables -A FORWARD -i eth0 -d 192.168.60.5 -p tcp --dport 23 -j ACCEPT
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   61  3282 ACCEPT     tcp  --  eth0   any     anywhere             host1-192.168.60.5.net-192.168.60.0  tcp dpt:telnet
+    7   420 DROP       tcp  --  eth0   any     anywhere             anywhere            
+    3   180 DROP       all  --  eth1   any     anywhere             anywhere
+TAS K3.B:
+- iptables -A FORWARD -p tcp -i eth0 --dport 23 --syn -m conntrack --ctstate NEW -j ACCEPT
+- iptables -A FORWARD -p tcp -i eth0 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+- iptables -A FORWARD -i eth1 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+- iptables -A FORWARD -p tcp -i eth1 --syn -m conntrack --ctstate NEW -j ACCEPT
+- iptables -P FORWARD DROP
+Chain FORWARD (policy DROP 4 packets, 247 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    2   120 ACCEPT     tcp  --  eth0   any     anywhere             host1-192.168.60.5.net-192.168.60.0  tcp dpt:telnet flags:FIN,SYN,RST,ACK/SYN ctstate NEW
+   98  5299 ACCEPT     tcp  --  eth0   any     anywhere             anywhere             ctstate RELATED,ESTABLISHED
+   35  2433 ACCEPT     all  --  eth1   any     anywhere             anywhere             ctstate RELATED,ESTABLISHED
+    0     0 ACCEPT     tcp  --  eth1   any     anywhere             anywhere             tcp flags:FIN,SYN,RST,ACK/SYN ctstate NEW
+
+TASK 5.1 nth mode:
+root@2ac69dbd73fc:/# iptables -t nat -A PREROUTING -p udp --dport 8080 -m statistic --mode nth --every 3 --packet 0 -j DNAT --to-destination 192.168.60.5:8080
+root@2ac69dbd73fc:/# iptables -t nat -A PREROUTING -p udp --dport 8080 -m statistic --mode nth --every 3 --packet 1 -j DNAT --to-destination 192.168.60.6:8080
+root@2ac69dbd73fc:/# iptables -t nat -A PREROUTING -p udp --dport 8080 -m statistic --mode nth --every 3 --packet 2 -j DNAT --to-destination 192.168.60.7:8080
+ so i put that the 1st pck goes in the first host, 2nd in the 2nd and so on and so for.
+TASK 5.2 Random:
+root@2ac69dbd73fc:/# iptables -t nat -A PREROUTING -p udp --dport 8080 -m statistic --mode random --probability 0.33 -j DNAT --to-destination 192.168.60.5:8080
+root@2ac69dbd73fc:/# iptables -t nat -A PREROUTING -p udp --dport 8080 -m statistic --mode random --probability 0.5 -j DNAT --to-destination 192.168.60.6:8080
+root@2ac69dbd73fc:/# iptables -t nat -A PREROUTING -p udp --dport 8080 -m statistic --mode random --probability 1 -j DNAT --to-destination 192.168.60.7:8080
+
+Since every rule select fe .33 the first server, otherwise pass to the 2nd...
+
 Other command in the lab description
+
