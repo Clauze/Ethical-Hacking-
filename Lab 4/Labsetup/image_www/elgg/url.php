@@ -47,14 +47,14 @@ if (!$url && isset($vars['value'])) {
 
 if (isset($vars['text'])) {
 	if (elgg_extract('encode_text', $vars, false)) {
-		//$text = htmlspecialchars($vars['text'], ENT_QUOTES, 'UTF-8', false);
+		$text = htmlspecialchars($vars['text'], ENT_QUOTES, 'UTF-8', false);
 		$text = $vars['text'];
 	} else {
 		$text = elgg_extract('text', $vars);
 	}
 	unset($vars['text']);
 } else {
-	//$text = htmlspecialchars(elgg_get_excerpt($url, $excerpt_length), ENT_QUOTES, 'UTF-8', false);
+	$text = htmlspecialchars(elgg_get_excerpt($url, $excerpt_length), ENT_QUOTES, 'UTF-8', false);
 	$text = elgg_get_excerpt($url, $excerpt_length);
 }
 

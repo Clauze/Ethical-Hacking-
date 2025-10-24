@@ -75,8 +75,8 @@ function elgg_get_title_input($variable = 'title', $default = '') {
  * @return mixed The filtered result - everything will be strings
  */
 function filter_tags($var) {
-	// return elgg_trigger_plugin_hook('validate', 'input', null, $var);
-	return $var;
+	return elgg_trigger_plugin_hook('validate', 'input', null, $var);
+//	return $var;
 }
 
 /**

